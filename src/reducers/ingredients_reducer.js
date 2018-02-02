@@ -28,8 +28,9 @@ export default function(state = ret, action) {
       return state;
     case DELETE_INGREDIENT:
       console.log('deleted ingredient');
-      window.localStorage.setItem('ingredientsList', JSON.stringify(state));
-      return state.filter((v, i) => i != action.payload);
+      const newState = state.filter((v, i) => i != action.payload);
+      window.localStorage.setItem('ingredientsList', JSON.stringify(newState));
+      return newState;
     default:
       return state;
   }

@@ -21,9 +21,9 @@ ReactDOM.render(
       <BrowserRouter>
         <Switch>
           <Route path="/skladnik/nowy" component={ProjectNew} />
-          {/* <Route path="/procedury" component={ ProcedureList } /> */}
           <Route path="/skladnik/:id" component={IngredientDetail} />
           <Route path="/skladniki" component={IngredientsList} />
+          {/* <Route path="/przepisy" component={RecipesList} /> */}
           <Route path="/" component={Index} />
         </Switch>
       </BrowserRouter>
