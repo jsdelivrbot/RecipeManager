@@ -8,7 +8,7 @@ if (window.localStorage.getItem('tasksList')) {
     {
       name: 'katering jakistam',
       date: new Date(),
-      recipes: [{ id: '1517626410068', amount: 20 }]
+      recipes: [{ id: '122424234234', amount: 20 }]
     }
   ];
 }

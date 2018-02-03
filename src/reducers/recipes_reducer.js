@@ -7,10 +7,16 @@ if (window.localStorage.getItem('recipesList')) {
     {
       id: '122424234234',
       name: 'Zupa krem z pomidorow',
-      amount: 6,
+      baseAmount: 6,
       unit: 'kg',
       ingredients: [
-        { name: 'Kasza gryczana', price: '12', unit: 'g', id: '1517611139551' }
+        {
+          name: 'Kasza jaglana',
+          price: 6.91,
+          unit: 'kg',
+          id: '124241242443',
+          amount: 56
+        }
       ]
     }
   ];

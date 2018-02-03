@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import Redux, { bindActionCreators } from 'redux'
 
 import MenuBar from './menu_bar'
-import { addRecipe } from '../actions'
+import { addTask } from '../actions'
 import { units } from '../constants'
 import { generateID } from '../helpers'
 
@@ -16,7 +16,7 @@ import FlatButton from 'material-ui/FlatButton'
 import SelectField from 'material-ui/SelectField'
 import MenuItem from 'material-ui/MenuItem'
 
-class RecipeNew extends Component {
+class TaskNew extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -28,7 +28,7 @@ class RecipeNew extends Component {
 
   onSubmit() {
     const f1 = () => {
-      this.props.addRecipe(
+      this.props.addTask(
         { ...this.state, id: generateID(), ingredients: [] },
         () => {
           this.props.history.push('/przepisy')
@@ -92,13 +92,13 @@ class RecipeNew extends Component {
 
 function mapStateToProps(state) {
   return {
-    recipes: state.recipes,
+    tasks: state.tasks,
     procedures: state.procedures
   }
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ addRecipe: addRecipe }, dispatch)
+  return bindActionCreators({ addTask: addTask }, dispatch)
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(RecipeNew)
+export default connect(mapStateToProps, mapDispatchToProps)(TaskNew)

@@ -7,10 +7,11 @@ if (window.localStorage.getItem('ingredientsList')) {
     {
       name: 'Kasza jaglana',
       price: 6.91,
-      unit: 'kg'
+      unit: 'kg',
+      id: '124241242443'
     },
-    { name: 'Cebula', price: 2.11, unit: 'kg' },
-    { name: 'Mleko sojowe', price: 7.9, unit: 'l' }
+    { name: 'Cebula', price: 2.11, unit: 'kg', id: '68347843' },
+    { name: 'Mleko sojowe', price: 7.9, unit: 'l', id: '5897456' }
   ];
 }
 

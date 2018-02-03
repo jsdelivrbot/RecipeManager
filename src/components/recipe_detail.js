@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import Redux, { bindActionCreators } from 'redux'
-import { pullAllBy } from 'lodash'
+import { pullAllBy, cloneDeep } from 'lodash'
 
 import MenuBar from './menu_bar'
 import { IngredientsListRaw } from '../containers/ingredients_list'
@@ -52,6 +52,7 @@ class RecipeDetail extends Component {
       value: null,
       selectedIngredient: null
     }
+    console.log(this.state)
   }
 
   componentWillMount() {
@@ -96,8 +97,8 @@ class RecipeDetail extends Component {
   }
   addIngredient = () => {
     const tmp = pullAllBy(
-      [...this.props.ingredients],
-      [...this.state.newRecipe.ingredients],
+      cloneDeep(this.props.ingredients),
+      this.state.newRecipe.ingredients,
       'name'
     )
     if (tmp.length > 0) {
@@ -143,9 +144,9 @@ class RecipeDetail extends Component {
             hintText="ilość"
             underlineShow={false}
             onChange={e => {
-              this.state.newRecipe.amount = e.target.value
+              this.state.newRecipe.baseAmount = e.target.value
             }}
-            defaultValue={this.state.newRecipe.amount}
+            defaultValue={this.state.newRecipe.baseAmount}
           />
           <Divider />
           <SelectField
@@ -207,11 +208,15 @@ class RecipeDetail extends Component {
                         this.state.newRecipe.ingredients[index].name
                       }
                       onChange={(e, i, v) => {
-                        this.state.newRecipe.ingredients[index].name = v
+                        const localAmount = this.state.newRecipe.ingredients[
+                          index
+                        ].amount
+                        this.state.newRecipe.ingredients[index] = cloneDeep(
+                          this.props.ingredients[i]
+                        )
                         this.state.newRecipe.ingredients[
                           index
-                        ].unit = this.props.ingredients[i].unit
-
+                        ].amount = localAmount
                         this.setState(this.state)
                       }}
                       autoWidth={true}

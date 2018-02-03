@@ -21,7 +21,7 @@ class RecipeNew extends Component {
     super(props)
     this.state = {
       name: '',
-      amount: '',
+      baseAmount: '',
       unit: ''
     }
   }
@@ -51,6 +51,7 @@ class RecipeNew extends Component {
             underlineShow={false}
             onChange={e => {
               this.state.name = e.target.value
+              this.setState(this.state)
             }}
           />
           <Divider />
@@ -58,7 +59,8 @@ class RecipeNew extends Component {
             hintText="ilość"
             underlineShow={false}
             onChange={e => {
-              this.state.amount = e.target.value
+              this.state.baseAmount = e.target.value
+              this.setState(this.state)
             }}
           />
           <Divider />
@@ -98,7 +100,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ addRecipe: addRecipe }, dispatch)
+  return bindActionCreators({ addRecipe }, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(RecipeNew)

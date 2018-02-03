@@ -9,7 +9,7 @@ import { RecipesListRaw } from '../containers/recipes_list'
 
 import { editTask, deleteTask, addTask } from '../actions'
 import { units, getNewTask } from '../constants'
-import { parseRelations } from '../helpers'
+import { parseRelations, generateIngredientsToPrepare } from '../helpers'
 
 // import ImagesUploader from 'react-images-uploader';
 // import 'react-images-uploader/styles.css';
@@ -58,7 +58,6 @@ class TaskDetail extends Component {
       value: null,
       selectedRecipe: null
     }
-    console.log(this.state)
   }
 
   handleChange(event, index, value) {
@@ -121,11 +120,11 @@ class TaskDetail extends Component {
             value={this.state.newTask.recipes[index].name}
             defaultValue={this.state.newTask.recipes[index].name}
             onChange={(e, i, v) => {
-              this.state.newTask.recipes[index].name = v
-              this.state.newTask.recipes[index].unit = this.props.recipes[
-                i
-              ].unit
-
+              const localAmount = this.state.newTask.recipes[index].amount
+              this.state.newTask.recipes[index] = cloneDeep(
+                this.props.recipes[i]
+              )
+              this.state.newTask.recipes[index].amount = localAmount
               this.setState(this.state)
             }}
             autoWidth={true}
@@ -142,11 +141,23 @@ class TaskDetail extends Component {
             style={{ width: '90%' }}
             onChange={e => {
               row.amount = e.target.value
+              this.setState(this.state)
             }}
             defaultValue={row.amount}
           />
         </TableRowColumn>
         <TableRowColumn>{row.unit}</TableRowColumn>
+      </TableRow>
+    ))
+  }
+
+  renderToDoList() {
+    const toDoList = generateIngredientsToPrepare(this.state.newTask)
+    return Object.keys(toDoList).map(key => (
+      <TableRow key={key} selectable={false}>
+        <TableRowColumn>{toDoList[key].name}</TableRowColumn>
+        <TableRowColumn>{toDoList[key].amount}</TableRowColumn>
+        <TableRowColumn>{toDoList[key].unit}</TableRowColumn>
       </TableRow>
     ))
   }
@@ -214,6 +225,26 @@ class TaskDetail extends Component {
             </TableHeader>
             <TableBody displayRowCheckbox={false}>
               {this.renderRecipes()}
+              <TableRow
+                style={{
+                  textAlign: 'center',
+                  textTransform: 'uppercase',
+                  background: 'blue',
+                  width: '100%'
+                }}
+              >
+                <TableHeaderColumn
+                  colSpan="3"
+                  tooltip="Lista Przepisów"
+                  style={{
+                    textAlign: 'center',
+                    fontSize: '20px'
+                  }}
+                >
+                  Do zrobienia
+                </TableHeaderColumn>
+              </TableRow>
+              {this.renderToDoList()}
             </TableBody>
           </Table>{' '}
           <Dialog
@@ -230,12 +261,12 @@ class TaskDetail extends Component {
           <Divider />
           <Divider style={{ marginTop: 20, marginBottom: 20 }} />
           <FlatButton
-            label="Dodaj składnik"
+            label="Dodaj danie"
             fullWidth={true}
             onClick={this.addRecipe}
           />
           <FlatButton
-            label="Usuń składnik"
+            label="Usuń danie"
             fullWidth={true}
             onClick={this.removeRecipe}
           />
@@ -261,6 +292,7 @@ class TaskDetail extends Component {
 
 function mapStateToProps(state) {
   const tmp = cloneDeep(state.tasks).map(task => {
+    console.log('log', task.recipes, cloneDeep(state.recipes))
     return {
       ...task,
       recipes: parseRelations(task.recipes, cloneDeep(state.recipes))
