@@ -8,6 +8,9 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import RecipesList from './containers/recipes_list';
 import RecipeDetail from './components/recipe_detail';
 import RecipeNew from './components/recipe_new';
+import TasksList from './containers/tasks_list';
+import TaskDetail from './components/task_detail';
+import TaskNew from './components/task_new';
 import IngredientDetail from './components/ingredient_detail';
 import IngredientNew from './components/ingredient_new';
 import IngredientsList from './containers/ingredients_list';
@@ -27,6 +30,9 @@ ReactDOM.render(
           <Route path="/przepis/nowy" component={RecipeNew} />
           <Route path="/przepis/:id" component={RecipeDetail} />
           <Route path="/przepisy" component={RecipesList} />
+          <Route path="/zadanie/nowy" component={TaskDetail} />
+          <Route path="/zadanie/:id" component={TaskDetail} />
+          <Route path="/zadania" component={TasksList} />
           <Route path="/" component={Index} />
         </Switch>
       </BrowserRouter>

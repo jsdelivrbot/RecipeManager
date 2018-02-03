@@ -5,6 +5,7 @@ if (window.localStorage.getItem('recipesList')) {
 } else {
   ret = [
     {
+      id: '122424234234',
       name: 'Zupa krem z pomidorow',
       amount: 6,
       unit: 'kg',

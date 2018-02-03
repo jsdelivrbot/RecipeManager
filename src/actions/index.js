@@ -5,7 +5,11 @@ export const ADD_INGREDIENT = 'add_ingredient',
   FETCH_RECIPES = 'fetch_recipes',
   EDIT_RECIPE = 'edit_recipe',
   DELETE_RECIPE = 'delete_recipe',
-  ADD_RECIPE = 'add_recipe';
+  ADD_RECIPE = 'add_recipe',
+  FETCH_TASKS = 'fetch_tasks',
+  EDIT_TASK = 'edit_task',
+  DELETE_TASK = 'delete_task',
+  ADD_TASK = 'add_task';
 
 export const addIngredient = (ingredient, callback) => {
     callback();
@@ -59,5 +63,32 @@ export const addIngredient = (ingredient, callback) => {
     return {
       type: ADD_RECIPE,
       payload: recipe
+    };
+  },
+  fetchTasks = () => {
+    return {
+      type: FETCH_TASKS,
+      payload: {}
+    };
+  },
+  editTask = (id, task, callback) => {
+    callback();
+    return {
+      type: EDIT_TASK,
+      payload: { id, task }
+    };
+  },
+  deleteTask = (id, callback) => {
+    callback();
+    return {
+      type: DELETE_TASK,
+      payload: id
+    };
+  },
+  addTask = (task, callback) => {
+    callback();
+    return {
+      type: ADD_TASK,
+      payload: task
     };
   };

@@ -21,6 +21,11 @@ const MenuBar = props => {
       anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
     >
       <MenuItem
+        primaryText="Lista Zadań"
+        containerElement={<Link to="/zadania" />}
+      />
+      <Divider />
+      <MenuItem
         primaryText="Lista Przepisów"
         containerElement={<Link to="/przepisy" />}
       />
