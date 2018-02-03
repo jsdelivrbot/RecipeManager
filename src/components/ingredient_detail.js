@@ -126,7 +126,7 @@ class IngredientDetail extends Component {
           />
           <Divider />
           <TextField
-            hintText="cena"
+            floatingLabelText="cena"
             underlineShow={false}
             onChange={e => {
               this.state.newIngredient.price = e.target.value
@@ -152,18 +152,6 @@ class IngredientDetail extends Component {
               <MenuItem value={unit} primaryText={unit} key={unit} />
             ))}
           </SelectField>
-          <Divider style={{ marginTop: 20 }} />
-          {/* <List>
-            <Subheader inset={true}>Procedury</Subheader>
-            {this.renderProcedures()}
-          </List> */}
-          {/* <FlatButton
-            label="Dodaj Procedurę"
-            fullWidth={true}
-            onClick={() =>
-              this.setState({ ...this.state, openProcedury: true })
-            }
-          /> */}
           <Dialog
             title="Uwaga!!!"
             actions={actions(() => {
@@ -175,7 +163,6 @@ class IngredientDetail extends Component {
           >
             Czy na pewno chcesz usunąć składnik?
           </Dialog>
-          <Divider />
           <Divider style={{ marginTop: 20, marginBottom: 20 }} />
           <FlatButton
             label="Zapisz zmiany"
