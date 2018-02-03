@@ -1,4 +1,5 @@
 import { EDIT_TASK, ADD_TASK, DELETE_TASK } from '../actions';
+import { cloneDeep } from 'lodash';
 var ret;
 if (window.localStorage.getItem('tasksList')) {
   ret = JSON.parse(window.localStorage.getItem('tasksList'));
@@ -16,6 +17,8 @@ export default function(state = ret, action) {
   switch (action.type) {
     case EDIT_TASK:
       console.log('editing tasks');
+      let dupa = cloneDeep(state);
+      state[action.payload.id] = action.payload.task;
       window.localStorage.setItem('tasksList', JSON.stringify(state));
       return state;
     case ADD_TASK:

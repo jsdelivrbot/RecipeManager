@@ -44,8 +44,6 @@ import {
 
 class TaskDetail extends Component {
   constructor(props) {
-    console.log(props)
-
     super(props)
     this.id = props.match.params.id
     if (this.id === undefined) {
@@ -53,8 +51,6 @@ class TaskDetail extends Component {
       this.props.history.push('/zadania/')
     }
     this.newTask = this.props.tasks[this.id]
-
-    console.log('asdads', this.id)
     this.state = {
       open: false,
       id: this.id,
@@ -62,6 +58,7 @@ class TaskDetail extends Component {
       value: null,
       selectedRecipe: null
     }
+    console.log(this.state)
   }
 
   handleChange(event, index, value) {
