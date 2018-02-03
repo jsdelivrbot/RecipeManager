@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import Redux, { bindActionCreators } from 'redux';
 
 import MenuBar from '../components/menu_bar';
-import { fetchIngredients } from '../actions';
+import { fetchRecipes } from '../actions';
 
 import { List, ListItem } from 'material-ui/List';
 import ActionInfo from 'material-ui/svg-icons/action/info';
@@ -16,39 +16,27 @@ import ActionAssignment from 'material-ui/svg-icons/action/assignment';
 import { blue500, yellow600 } from 'material-ui/styles/colors';
 import EditorInsertChart from 'material-ui/svg-icons/editor/insert-chart';
 import TextField from 'material-ui/TextField';
-import {
-  Table,
-  TableBody,
-  TableFooter,
-  TableHeader,
-  TableHeaderColumn,
-  TableRow,
-  TableRowColumn
-} from 'material-ui/Table';
 
-export class IngredientsListRaw extends Component {
+class RecipesList extends Component {
   constructor(props) {
     super(props);
     this.state = {
       term: '',
-      ingredients: this.props.ingredients
+      recipes: this.props.recipes
     };
   }
 
-  // componentWillMount() {
-  //   console.log(!this.props.ingredients);
-  //   // if (!this.props.ingredients) {
-  //   //   this.props.fetchIngredients();
-  //   // }
-  // }
-
-  goToIngredient(id) {
-    this.props.history.push('/skladnik/' + id);
+  componentWillMount() {
+    this.props.fetchRecipes();
   }
 
-  searchIngredient(e) {
+  goToRecipe(id) {
+    this.props.history.push('/przepis/' + id);
+  }
+
+  searchRecipe(e) {
     this.state.term = e.target.value;
-    this.state.ingredients = this.props.ingredients.filter((item, i) => {
+    this.state.recipes = this.props.recipes.filter((item, i) => {
       let a = true;
       item.name.search(new RegExp(e.target.value, 'i')) == -1
         ? (a = false)
@@ -58,16 +46,17 @@ export class IngredientsListRaw extends Component {
     this.setState(this.state);
   }
 
-  renderIngredients() {
-    return this.state.ingredients.map((ingredient, i) => {
+  renderRecipes() {
+    console.log(this.state);
+    return this.state.recipes.map((recipe, i) => {
       return (
         <ListItem
           key={i}
           leftAvatar={<Avatar icon={<FileFolder />} />}
           // rightIcon={<ActionInfo />}
-          primaryText={ingredient.name}
-          secondaryText={`${ingredient.price} / ${ingredient.unit}`}
-          onClick={e => this.goToIngredient(i)}
+          primaryText={recipe.name}
+          // secondaryText={`${recipe.price} / ${recipe.unit}`}
+          onClick={e => this.goToRecipe(i)}
         />
       );
     });
@@ -91,14 +80,14 @@ export class IngredientsListRaw extends Component {
   render() {
     return (
       <div>
-        <MenuBar title="Lista składników" />
+        <MenuBar title="Lista przepisów" />
         <TextField
-          hintText="wyszukaj składnik"
+          hintText="wyszukaj przepis"
           underlineShow={true}
           value={this.state.term}
-          onChange={e => this.searchIngredient(e)}
+          onChange={e => this.searchRecipe(e)}
         />
-        <List>{this.renderIngredients()}</List>
+        <List>{this.renderRecipes()}</List>
         <Divider inset={true} />
         {/* <List>
           <Subheader inset={true}>Procedury</Subheader>
@@ -110,13 +99,14 @@ export class IngredientsListRaw extends Component {
 }
 
 function mapStateToProps(state) {
+  console.log('mapstateto props', state);
   return {
-    ingredients: state.ingredients
+    recipes: state.recipes
   };
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ fetchIngredients }, dispatch);
+  return bindActionCreators({ fetchRecipes: fetchRecipes }, dispatch);
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(IngredientsListRaw);
+export default connect(mapStateToProps, mapDispatchToProps)(RecipesList);

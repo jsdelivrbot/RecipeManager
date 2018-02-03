@@ -1,5 +1,4 @@
 import { EDIT_INGREDIENT, ADD_INGREDIENT, DELETE_INGREDIENT } from '../actions';
-import { remove } from 'lodash';
 var ret;
 if (window.localStorage.getItem('ingredientsList')) {
   ret = JSON.parse(window.localStorage.getItem('ingredientsList'));
