@@ -1,5 +1,6 @@
 //@flow
 import { has, merge } from 'lodash'
+import axios from 'axios'
 export const generateID = () =>
     Math.floor(Math.random() * 1000) + Date.now() + '',
   findIdInArray = (id, arr) => {
@@ -17,7 +18,7 @@ export const generateID = () =>
   generateIngredientsToPrepare = task => {
     const ret = {}
     task.recipes.forEach(recipe => {
-      recipe.ingredients.forEach(ingredient => {
+      (recipe.ingredients || []).forEach(ingredient => {
         if (has(ret, ingredient.id)) {
           ret[ingredient.id].amount +=
             ingredient.amount * recipe.amount / recipe.baseAmount

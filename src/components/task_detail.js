@@ -7,13 +7,9 @@ import { pullAllBy, intersectionBy, cloneDeep } from 'lodash'
 import MenuBar from './menu_bar'
 import { RecipesListRaw } from '../containers/recipes_list'
 
-import { editTask, deleteTask, addTask } from '../actions'
+import { editTask, deleteTask, addTask,fetchTasks } from '../actions'
 import { units, getNewTask } from '../constants'
 import { parseRelations, generateIngredientsToPrepare } from '../helpers'
-
-// import ImagesUploader from 'react-images-uploader';
-// import 'react-images-uploader/styles.css';
-// import 'react-images-uploader/font.css';
 
 import DatePicker from 'material-ui/DatePicker'
 import Paper from 'material-ui/Paper'
@@ -51,6 +47,7 @@ class TaskDetail extends Component {
       this.props.history.push('/zadania/')
     }
     this.newTask = this.props.tasks[this.id]
+    console.log('newTask',this.newTask);
     this.state = {
       open: false,
       id: this.id,
@@ -60,13 +57,19 @@ class TaskDetail extends Component {
     }
   }
 
+  componentWillMount(){
+    this.props.fetchTasks()
+  }
+
   handleChange(event, index, value) {
     this.setState({ ...this.state, value: value })
   }
 
   onSubmit = () => {
     const f1 = () => {
-      this.props.editTask(this.id, this.state.newTask, () => {
+      const newTasks = this.props.tasks
+      newTasks[this.id] = this.state.newTask
+      this.props.editTask(this.id,newTasks, () => {
         console.log('saved')
       })
     }
@@ -89,8 +92,9 @@ class TaskDetail extends Component {
 
   handleClose2 = () => {
     this.setState({ ...this.state, open: false })
-    console.log(this.state)
-    this.props.deleteTask(this.id, () => {
+    const tmp =(this.props.tasks)
+    tmp.splice(this.id,1)
+    this.props.deleteTask(tmp, () => {
       this.props.history.push('/zadania')
     })
   }
@@ -152,6 +156,7 @@ class TaskDetail extends Component {
   }
 
   renderToDoList() {
+    console.log(this.state.newTask)
     const toDoList = generateIngredientsToPrepare(this.state.newTask)
     return Object.keys(toDoList).map(key => (
       <TableRow key={key} selectable={false}>
@@ -175,7 +180,7 @@ class TaskDetail extends Component {
       ]
     }
 
-    return this.id ? (
+    return this.id && this.props.tasks.length>0 ? (
       <div>
         <MenuBar title="Edytuj zadanie" />
         <Paper zDepth={2} style={{ padding: 10 }}>
@@ -291,11 +296,10 @@ class TaskDetail extends Component {
 }
 
 function mapStateToProps(state) {
-  const tmp = cloneDeep(state.tasks).map(task => {
-    console.log('log', task.recipes, cloneDeep(state.recipes))
+  const tmp = state.tasks.length>0 && cloneDeep(state.tasks).map(task => {
     return {
       ...task,
-      recipes: parseRelations(task.recipes, cloneDeep(state.recipes))
+      recipes: parseRelations(task.recipes|| [], cloneDeep(state.recipes))
     }
   })
   return {
@@ -306,7 +310,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ editTask, deleteTask, addTask }, dispatch)
+  return bindActionCreators({ editTask, deleteTask, addTask,fetchTasks }, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(TaskDetail)

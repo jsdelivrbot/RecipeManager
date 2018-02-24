@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import Redux, { bindActionCreators } from 'redux';
-
+import axios from 'axios';
 import MenuBar from '../components/menu_bar';
 import { fetchRecipes } from '../actions';
 
@@ -22,7 +22,6 @@ class RecipesList extends Component {
     super(props);
     this.state = {
       term: '',
-      recipes: this.props.recipes
     };
   }
 
@@ -47,8 +46,7 @@ class RecipesList extends Component {
   }
 
   renderRecipes() {
-    console.log(this.state);
-    return this.state.recipes.map((recipe, i) => {
+    return this.props.recipes.map((recipe, i) => {
       return (
         <ListItem
           key={i}
@@ -62,20 +60,6 @@ class RecipesList extends Component {
     });
   }
 
-  // renderProcedures() {
-  //   return this.props.procedures.map(procedure => {
-  //     return (
-  //       <ListItem
-  //         key={procedure.name}
-  //         leftAvatar={
-  //           <Avatar icon={<ActionAssignment />} backgroundColor={blue500} />
-  //         }
-  //         // rightIcon={<ActionInfo />}
-  //         primaryText={procedure.name}
-  //       />
-  //     )
-  //   })
-  // }
 
   render() {
     return (
@@ -89,24 +73,19 @@ class RecipesList extends Component {
         />
         <List>{this.renderRecipes()}</List>
         <Divider inset={true} />
-        {/* <List>
-          <Subheader inset={true}>Procedury</Subheader>
-          { this.renderProcedures() }
-        </List> */}
       </div>
     );
   }
 }
 
 function mapStateToProps(state) {
-  console.log('mapstateto props', state);
   return {
     recipes: state.recipes
   };
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ fetchRecipes: fetchRecipes }, dispatch);
+  return bindActionCreators({ fetchRecipes }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(RecipesList);

@@ -20,16 +20,16 @@ class TaskNew extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      name: '',
-      amount: '',
-      unit: ''
+      name: 'nowe zadanie (task new)',
+      amount: '100',
+      unit: 'kg'
     }
   }
 
   onSubmit() {
     const f1 = () => {
       this.props.addTask(
-        { ...this.state, id: generateID(), ingredients: [] },
+        [{ ...this.state, id: generateID(), ingredients: [] }],
         () => {
           this.props.history.push('/przepisy')
         }

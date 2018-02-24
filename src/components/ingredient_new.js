@@ -28,7 +28,10 @@ class IngredientNew extends Component {
 
   onSubmit() {
     const f1 = () => {
-      this.props.addIngredient({ ...this.state, id: generateID() }, () => {
+      console.log('huj',this.props);
+      const newState = this.props.ingredients
+      newState.push({ ...this.state, id: generateID() });
+      this.props.addIngredient(newState, () => {
         this.props.history.push('/')
       })
     }
@@ -90,7 +93,6 @@ class IngredientNew extends Component {
 function mapStateToProps(state) {
   return {
     ingredients: state.ingredients,
-    procedures: state.procedures
   }
 }
 

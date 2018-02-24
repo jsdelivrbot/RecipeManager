@@ -1,36 +1,28 @@
-import { EDIT_INGREDIENT, ADD_INGREDIENT, DELETE_INGREDIENT } from '../actions';
-var ret;
-if (window.localStorage.getItem('ingredientsList')) {
-  ret = JSON.parse(window.localStorage.getItem('ingredientsList'));
-} else {
-  ret = [
-    {
-      name: 'Kasza jaglana',
-      price: 6.91,
-      unit: 'kg',
-      id: '124241242443'
-    },
-    { name: 'Cebula', price: 2.11, unit: 'kg', id: '68347843' },
-    { name: 'Mleko sojowe', price: 7.9, unit: 'l', id: '5897456' }
-  ];
-}
+import { EDIT_INGREDIENT, ADD_INGREDIENT, DELETE_INGREDIENT,FETCH_INGREDIENTS } from '../actions';
+import axios from 'axios';
+// const ret= axios.get("https://recipemanager-cad40.firebaseio.com/ingredients.json");
 
-export default function(state = ret, action) {
+
+export default function(state = [], action) {
   switch (action.type) {
     case EDIT_INGREDIENT:
       console.log('editing ingredients');
-      window.localStorage.setItem('ingredientsList', JSON.stringify(state));
+      // window.localStorage.setItem('ingredientsList', JSON.stringify(state));
       return state;
     case ADD_INGREDIENT:
       console.log('adding ingredient');
       state.push(action.payload);
-      window.localStorage.setItem('ingredientsList', JSON.stringify(state));
+      console.log(state);
+      // window.localStorage.setItem('ingredientsList', JSON.stringify(state));
       return state;
     case DELETE_INGREDIENT:
-      console.log('deleted ingredient');
+      // console.log('deleted ingredient',action.payload);
       const newState = state.filter((v, i) => i != action.payload);
-      window.localStorage.setItem('ingredientsList', JSON.stringify(newState));
+      // window.localStorage.setItem('ingredientsList', JSON.stringify(newState));
       return newState;
+    case FETCH_INGREDIENTS:
+      // window.localStorage.setItem('ingredientsList', JSON.stringify(action.payload.data));
+      return action.payload.data;
     default:
       return state;
   }

@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import Redux, { bindActionCreators } from 'redux';
+import { generateID } from '../helpers'
 
 import MenuBar from '../components/menu_bar';
-import { fetchTasks } from '../actions';
+import { fetchTasks,fetchRecipes,fetchIngredients,addTask } from '../actions';
 
 import { List, ListItem } from 'material-ui/List';
 import ActionInfo from 'material-ui/svg-icons/action/info';
@@ -23,12 +24,13 @@ class TasksList extends Component {
     super(props);
     this.state = {
       term: '',
-      tasks: this.props.tasks
     };
   }
 
   componentWillMount() {
-    console.log(this.props);
+    this.props.fetchTasks();
+    this.props.fetchRecipes();
+    this.props.fetchIngredients();
   }
 
   goToTask(id) {
@@ -46,10 +48,16 @@ class TasksList extends Component {
     });
     this.setState(this.state);
   }
+  addTask(){
+    this.props.addTask(
+      [...this.props.tasks, {name: 'nowe zadanie(list)',amount: '100',unit: 'kg', id: generateID(), ingredients: [],recipes:[],date:new Date() }],
+      () => {}
+    )
+  }
 
   renderTasks() {
     console.log(this.state);
-    return this.state.tasks.map((task, i) => {
+    return this.props.tasks.map((task, i) => {
       return (
         <ListItem
           key={i}
@@ -73,9 +81,7 @@ class TasksList extends Component {
         />
         <List>{this.renderTasks()}</List>
         <Divider inset={true} />
-        <Link to="/zadanie/nowy">
-          <FlatButton label="Dodaj zadanie" fullWidth={true} />
-        </Link>
+        <FlatButton label="Dodaj zadanie" fullWidth={true} onClick={()=>this.addTask()}/>
       </div>
     );
   }
@@ -83,12 +89,14 @@ class TasksList extends Component {
 
 function mapStateToProps(state) {
   return {
-    tasks: state.tasks
+    tasks: state.tasks,
+    ingredients: state.ingredients,
+    recipes: state.recipes
   };
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ fetchTasks }, dispatch);
+  return bindActionCreators({ fetchTasks,fetchRecipes,fetchIngredients,addTask }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(TasksList);

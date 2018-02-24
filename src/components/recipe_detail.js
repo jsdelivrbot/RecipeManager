@@ -7,7 +7,7 @@ import { pullAllBy, cloneDeep } from 'lodash'
 import MenuBar from './menu_bar'
 import { IngredientsListRaw } from '../containers/ingredients_list'
 
-import { editRecipe, deleteRecipe } from '../actions'
+import { editRecipe, deleteRecipe,fetchRecipes,fetchIngredients } from '../actions'
 import { units } from '../constants'
 
 // import ImagesUploader from 'react-images-uploader';
@@ -52,13 +52,15 @@ class RecipeDetail extends Component {
       value: null,
       selectedIngredient: null
     }
-    console.log(this.state)
   }
 
   componentWillMount() {
-    // this.props.recipes[this.id].procedures.forEach(item => {
-    //   this.state.proceduresLeft.splice(item, 1)
-    // })
+    this.props.fetchRecipes().then(()=>{
+      const newRecipe = this.props.recipes[this.id]
+      if(!newRecipe.ingredients)newRecipe.ingredients = []
+      this.setState({...this.state,newRecipe})
+    })
+    this.props.fetchIngredients()
   }
 
   handleChange(event, index, value) {
@@ -67,7 +69,7 @@ class RecipeDetail extends Component {
 
   onSubmit = () => {
     const f1 = () => {
-      this.props.editRecipe(this.id, this.state.newRecipe, () => {
+      this.props.editRecipe(this.id, this.props.recipes, () => {
         console.log('saved')
       })
     }
@@ -90,8 +92,7 @@ class RecipeDetail extends Component {
 
   handleClose2 = () => {
     this.setState({ ...this.state, open: false })
-    console.log(this.state)
-    this.props.deleteRecipe(this.id, () => {
+    this.props.deleteRecipe(this.props.recipes.filter(v=>v.id!==this.state.newRecipe.id), () => {
       this.props.history.push('/')
     })
   }
@@ -106,6 +107,7 @@ class RecipeDetail extends Component {
       this.setState(this.state)
     }
   }
+
   removeIngredient = () => {
     this.state.newRecipe.ingredients = this.state.newRecipe.ingredients.filter(
       (v, i) => {
@@ -127,7 +129,7 @@ class RecipeDetail extends Component {
       ]
     }
 
-    return (
+    return  this.state.newRecipe  ?  (
       <div>
         <MenuBar title="Edytuj przepis" />
         <Paper zDepth={2} style={{ padding: 10 }}>
@@ -198,7 +200,7 @@ class RecipeDetail extends Component {
               </TableRow>
             </TableHeader>
             <TableBody displayRowCheckbox={false}>
-              {this.state.newRecipe.ingredients.map((row, index) => (
+              {(this.state.newRecipe.ingredients || []).map((row, index) => (
                 <TableRow key={index}>
                   <TableRowColumn>
                     <SelectField
@@ -221,12 +223,12 @@ class RecipeDetail extends Component {
                       }}
                       autoWidth={true}
                     >
-                      {this.props.ingredients.map(ing => (
+                       {this.props.ingredients.map(ing => (
                         <MenuItem
                           value={ing.name}
                           primaryText={ing.name}
                           key={ing.id}
-                          onChange={() => console.log('1')}
+                          // onChange={() => console.log('1')}
                         />
                       ))}
                     </SelectField>
@@ -284,7 +286,7 @@ class RecipeDetail extends Component {
           />
         </Paper>
       </div>
-    )
+    ) : <div>Loading...</div>
   }
 }
 
@@ -296,7 +298,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ editRecipe, deleteRecipe }, dispatch)
+  return bindActionCreators({ editRecipe, deleteRecipe,fetchIngredients,fetchRecipes }, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(RecipeDetail)

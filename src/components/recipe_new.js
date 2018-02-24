@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import Redux, { bindActionCreators } from 'redux'
 
 import MenuBar from './menu_bar'
-import { addRecipe } from '../actions'
+import { addRecipe,fetchRecipes } from '../actions'
 import { units } from '../constants'
 import { generateID } from '../helpers'
 
@@ -25,11 +25,14 @@ class RecipeNew extends Component {
       unit: ''
     }
   }
-
+ componentWillMount(){
+   this.props.fetchRecipes()
+ }
   onSubmit() {
     const f1 = () => {
+      console.log([...this.props.recipes,  { ...this.state, id: generateID(), ingredients: [] }]);
       this.props.addRecipe(
-        { ...this.state, id: generateID(), ingredients: [] },
+      [...this.props.recipes,  { ...this.state, id: generateID(), ingredients: [] }],
         () => {
           this.props.history.push('/przepisy')
         }
@@ -95,12 +98,11 @@ class RecipeNew extends Component {
 function mapStateToProps(state) {
   return {
     recipes: state.recipes,
-    procedures: state.procedures
   }
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ addRecipe }, dispatch)
+  return bindActionCreators({ addRecipe,fetchRecipes }, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(RecipeNew)

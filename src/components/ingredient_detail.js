@@ -54,7 +54,7 @@ class IngredientDetail extends Component {
 
   onSubmit = () => {
     const f1 = () => {
-      this.props.editIngredient(this.id, this.state.newIngredient, () => {
+      this.props.editIngredient(this.props.ingredients, () => {
         console.log('saved')
       })
     }
@@ -77,8 +77,8 @@ class IngredientDetail extends Component {
 
   handleClose2 = () => {
     this.setState({ ...this.state, open: false })
-    console.log(this.state)
-    this.props.deleteIngredient(this.id, () => {
+    console.log("usuwam",this.props);
+    this.props.deleteIngredient( this.props.ingredients.filter((v, i) => v.id !=this.state.newIngredient.id), () => {
       this.props.history.push('/')
     })
   }
@@ -191,7 +191,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators(
-    { editIngredient: editIngredient, deleteIngredient: deleteIngredient },
+    { editIngredient,  deleteIngredient },
     dispatch
   )
 }

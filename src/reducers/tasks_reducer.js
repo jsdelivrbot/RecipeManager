@@ -1,36 +1,27 @@
-import { EDIT_TASK, ADD_TASK, DELETE_TASK } from '../actions';
+import { EDIT_TASK, ADD_TASK, DELETE_TASK,FETCH_TASKS } from '../actions';
 import { cloneDeep } from 'lodash';
-var ret;
-if (window.localStorage.getItem('tasksList')) {
-  ret = JSON.parse(window.localStorage.getItem('tasksList'));
-} else {
-  ret = [
-    {
-      name: 'katering jakistam',
-      date: new Date(),
-      recipes: [{ id: '122424234234', amount: 20 }]
-    }
-  ];
-}
 
-export default function(state = ret, action) {
+export default function(state = [], action) {
   switch (action.type) {
     case EDIT_TASK:
       console.log('editing tasks');
       let dupa = cloneDeep(state);
       state[action.payload.id] = action.payload.task;
-      window.localStorage.setItem('tasksList', JSON.stringify(state));
+      // window.localStorage.setItem('tasksList', JSON.stringify(state));
       return state;
     case ADD_TASK:
       console.log('adding task');
-      state.push(action.payload);
-      window.localStorage.setItem('tasksList', JSON.stringify(state));
-      return state;
+      // state.push(action.payload);
+      // window.localStorage.setItem('tasksList', JSON.stringify(state));
+      return action.payload;
     case DELETE_TASK:
-      console.log('deleted task');
-      const newState = state.filter((v, i) => i != action.payload);
-      window.localStorage.setItem('tasksList', JSON.stringify(newState));
-      return newState;
+      console.log('deleted task',state,action.payload);
+      // window.localStorage.setItem('tasksList', JSON.stringify(newState));
+      return action.payload.data;
+    case FETCH_TASKS:
+      console.log('fetching tasks');
+      // window.localStorage.setItem('tasksList', JSON.stringify(action.payload.data));
+      return action.payload.data || [];
     default:
       return state;
   }

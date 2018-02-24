@@ -31,16 +31,12 @@ export class IngredientsListRaw extends Component {
     super(props);
     this.state = {
       term: '',
-      ingredients: this.props.ingredients
     };
   }
 
-  // componentWillMount() {
-  //   console.log(!this.props.ingredients);
-  //   // if (!this.props.ingredients) {
-  //   //   this.props.fetchIngredients();
-  //   // }
-  // }
+  componentWillMount() {
+      this.props.fetchIngredients();
+  }
 
   goToIngredient(id) {
     this.props.history.push('/skladnik/' + id);
@@ -59,7 +55,7 @@ export class IngredientsListRaw extends Component {
   }
 
   renderIngredients() {
-    return this.state.ingredients.map((ingredient, i) => {
+    return this.props.ingredients.map((ingredient, i) => {
       return (
         <ListItem
           key={i}
@@ -73,25 +69,14 @@ export class IngredientsListRaw extends Component {
     });
   }
 
-  // renderProcedures() {
-  //   return this.props.procedures.map(procedure => {
-  //     return (
-  //       <ListItem
-  //         key={procedure.name}
-  //         leftAvatar={
-  //           <Avatar icon={<ActionAssignment />} backgroundColor={blue500} />
-  //         }
-  //         // rightIcon={<ActionInfo />}
-  //         primaryText={procedure.name}
-  //       />
-  //     )
-  //   })
-  // }
-
   render() {
     return (
       <div>
         <MenuBar title="Lista składników" />
+        <button onClick={()=>{
+          this.props.fetchIngredients()
+          this.setState(this.state)
+        }}/>
         <TextField
           hintText="wyszukaj składnik"
           underlineShow={true}
@@ -100,10 +85,6 @@ export class IngredientsListRaw extends Component {
         />
         <List>{this.renderIngredients()}</List>
         <Divider inset={true} />
-        {/* <List>
-          <Subheader inset={true}>Procedury</Subheader>
-          { this.renderProcedures() }
-        </List> */}
       </div>
     );
   }

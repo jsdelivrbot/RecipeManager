@@ -16,8 +16,8 @@ import IngredientNew from './components/ingredient_new';
 import IngredientsList from './containers/ingredients_list';
 import Index from './containers/index';
 import reducers from './reducers';
-
-const createStoreWithMiddleware = applyMiddleware()(createStore);
+import ReduxPromise from 'redux-promise';
+const createStoreWithMiddleware = applyMiddleware(ReduxPromise)(createStore);
 
 ReactDOM.render(
   <Provider store={createStoreWithMiddleware(reducers)}>
