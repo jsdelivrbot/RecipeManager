@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import Redux, { bindActionCreators } from 'redux';
-import { generateID } from '../helpers'
+// import { generateID } from '../helpers'
 
 import MenuBar from '../components/menu_bar';
 import { fetchTasks,fetchRecipes,fetchIngredients,addTask } from '../actions';
@@ -50,19 +50,19 @@ class TasksList extends Component {
   }
   addTask(){
     this.props.addTask(
-      [...this.props.tasks, {name: 'nowe zadanie(list)',amount: '100',unit: 'kg', id: generateID(), ingredients: [],recipes:[],date:new Date() }],
-      () => {}
-    )
+      {name: 'nowe zadanie(list)',amount: '100',unit: 'kg', ingredients: {},recipes:{},date:new Date() },
+      () => this.props.history.push('/')
+    );
   }
 
   renderTasks() {
     console.log(this.state);
-    return this.props.tasks.map((task, i) => {
+    return Object.entries(this.props.tasks).map((task, i) => {
       return (
         <ListItem
           key={i}
           leftAvatar={<Avatar icon={<FileFolder />} />}
-          primaryText={task.name}
+          primaryText={task[1].name}
           onClick={e => this.goToTask(i)}
         />
       );

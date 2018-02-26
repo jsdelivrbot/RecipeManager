@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import Redux, { bindActionCreators } from 'redux'
-import { pullAllBy, intersectionBy, cloneDeep } from 'lodash'
+import { pullAllBy,pullAll, intersectionBy, cloneDeep } from 'lodash'
 
 import MenuBar from './menu_bar'
 import { RecipesListRaw } from '../containers/recipes_list'
@@ -41,13 +41,14 @@ import {
 class TaskDetail extends Component {
   constructor(props) {
     super(props)
-    this.id = props.match.params.id
+    this.id = Object.keys(this.props.tasks)[props.match.params.id];
     if (this.id === undefined) {
       this.props.addTask(getNewTask(), () => {})
       this.props.history.push('/zadania/')
     }
+    console.log('mega',this.props.tasks);
+
     this.newTask = this.props.tasks[this.id]
-    console.log('newTask',this.newTask);
     this.state = {
       open: false,
       id: this.id,
@@ -67,9 +68,8 @@ class TaskDetail extends Component {
 
   onSubmit = () => {
     const f1 = () => {
-      const newTasks = this.props.tasks
-      newTasks[this.id] = this.state.newTask
-      this.props.editTask(this.id,newTasks, () => {
+      console.log(this.id,this.state.newTask);
+      this.props.editTask(this.id,this.state.newTask, () => {
         console.log('saved')
       })
     }
@@ -92,71 +92,67 @@ class TaskDetail extends Component {
 
   handleClose2 = () => {
     this.setState({ ...this.state, open: false })
-    const tmp =(this.props.tasks)
-    tmp.splice(this.id,1)
-    this.props.deleteTask(tmp, () => {
-      this.props.history.push('/zadania')
+    this.props.deleteTask(this.id, () => {
+      this.props.history.push('/')
     })
   }
   addRecipe = () => {
-    const tmp = pullAllBy(
-      cloneDeep(this.props.recipes),
-      [...this.state.newTask.recipes],
-      'name'
+    const tmp = pullAll(
+      Object.keys(this.props.recipes),
+      Object.keys(this.state.newTask.recipes),
     )
+    console.log(this.state);
     if (tmp.length > 0) {
-      this.state.newTask.recipes.push(tmp[0])
+      this.state.newTask.recipes[tmp[0]] = this.props.recipes[tmp[0]]
       this.setState(this.state)
     }
   }
   removeRecipe = () => {
-    this.state.newTask.recipes = this.state.newTask.recipes.filter((v, i) => {
-      return i != this.state.selectedRecipe
-    })
+    delete this.state.newTask.recipes[Object.keys(this.state.newTask.recipes)[this.state.selectedRecipe]]
     this.setState(this.state)
   }
   renderRecipes() {
-    return this.state.newTask.recipes.map((row, index) => (
+    console.log('rendering recipes',this.state,(this.state.newTask.recipes));
+    return Object.entries(this.state.newTask.recipes).map((row, index) => (
       <TableRow key={index}>
         <TableRowColumn>
           <SelectField
             floatingLabelText="Danie"
-            value={this.state.newTask.recipes[index].name}
-            defaultValue={this.state.newTask.recipes[index].name}
+            value={this.state.newTask.recipes[row[0]].name}
+            defaultValue={this.state.newTask.recipes[row[0]].name}
             onChange={(e, i, v) => {
-              const localAmount = this.state.newTask.recipes[index].amount
-              this.state.newTask.recipes[index] = cloneDeep(
-                this.props.recipes[i]
+              const localAmount = this.state.newTask.recipes[row[0]].amount
+              this.state.newTask.recipes[row[0]] = cloneDeep(
+                this.props.recipes[Object.keys(this.props.recipes)[i]]
               )
-              this.state.newTask.recipes[index].amount = localAmount
+              this.state.newTask.recipes[row[0]].amount = localAmount
               this.setState(this.state)
             }}
             autoWidth={true}
           >
-            {this.props.recipes.map(ing => (
-              <MenuItem value={ing.name} primaryText={ing.name} key={ing.id} />
+            {Object.entries(this.props.recipes).map(ing => (
+              <MenuItem value={ing[1].name} primaryText={ing[1].name} key={ing[1].id} />
             ))}
           </SelectField>
         </TableRowColumn>
         <TableRowColumn>
           <TextField
-            id={row.id}
+            id={row[1].id}
             underlineShow={false}
             style={{ width: '90%' }}
             onChange={e => {
-              row.amount = e.target.value
+              row[1].amount = e.target.value
               this.setState(this.state)
             }}
-            defaultValue={row.amount}
+            defaultValue={row[1].amount}
           />
         </TableRowColumn>
-        <TableRowColumn>{row.unit}</TableRowColumn>
+        <TableRowColumn>{row[1].unit}</TableRowColumn>
       </TableRow>
     ))
   }
 
   renderToDoList() {
-    console.log(this.state.newTask)
     const toDoList = generateIngredientsToPrepare(this.state.newTask)
     return Object.keys(toDoList).map(key => (
       <TableRow key={key} selectable={false}>
@@ -180,7 +176,7 @@ class TaskDetail extends Component {
       ]
     }
 
-    return this.id && this.props.tasks.length>0 ? (
+    return this.id && Object.keys(this.props.tasks).length>0 ? (
       <div>
         <MenuBar title="Edytuj zadanie" />
         <Paper zDepth={2} style={{ padding: 10 }}>
@@ -296,10 +292,11 @@ class TaskDetail extends Component {
 }
 
 function mapStateToProps(state) {
-  const tmp = state.tasks.length>0 && cloneDeep(state.tasks).map(task => {
-    return {
-      ...task,
-      recipes: parseRelations(task.recipes|| [], cloneDeep(state.recipes))
+  const tmp = {}
+  Object.keys(state.tasks).length>0 && Object.entries(cloneDeep(state.tasks)).map(task => {
+    tmp[task[0]] =  {
+      ...task[1],
+      recipes: parseRelations(task[1].recipes || {}, cloneDeep(state.recipes))
     }
   })
   return {

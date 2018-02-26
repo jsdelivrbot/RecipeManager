@@ -22,7 +22,8 @@ class RecipeNew extends Component {
     this.state = {
       name: '',
       baseAmount: '',
-      unit: ''
+      unit: '',
+      ingredients:{}
     }
   }
  componentWillMount(){
@@ -30,12 +31,9 @@ class RecipeNew extends Component {
  }
   onSubmit() {
     const f1 = () => {
-      console.log([...this.props.recipes,  { ...this.state, id: generateID(), ingredients: [] }]);
       this.props.addRecipe(
-      [...this.props.recipes,  { ...this.state, id: generateID(), ingredients: [] }],
-        () => {
-          this.props.history.push('/przepisy')
-        }
+        this.state,
+        () => this.props.history.push('/')
       )
     }
     const f2 = () => {

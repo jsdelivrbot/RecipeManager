@@ -28,10 +28,7 @@ class IngredientNew extends Component {
 
   onSubmit() {
     const f1 = () => {
-      console.log('huj',this.props);
-      const newState = this.props.ingredients
-      newState.push({ ...this.state, id: generateID() });
-      this.props.addIngredient(newState, () => {
+      this.props.addIngredient(this.state, () => {
         this.props.history.push('/')
       })
     }

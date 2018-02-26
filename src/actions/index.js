@@ -14,26 +14,26 @@ export const ADD_INGREDIENT = 'add_ingredient',
 
 export const addIngredient = (ingredient, callback) => {
     callback();
-    const promise= axios.put('https://recipemanager-cad40.firebaseio.com/ingredients.json',ingredient);
+    const promise= axios.post('https://recipemanager-cad40.firebaseio.com/ingredients.json',ingredient);
     return {
       type: ADD_INGREDIENT,
       payload: promise
     };
   },
-  editIngredient = (ingredients, callback) => {
+  editIngredient = (id,ingredient, callback) => {
     callback();
-    const promise= axios.put('https://recipemanager-cad40.firebaseio.com/ingredients.json',ingredients);
+    const promise= axios.put(`https://recipemanager-cad40.firebaseio.com/ingredients/${id}.json`,ingredient);
     return {
       type: EDIT_INGREDIENT,
-      payload: ingredients
+      payload: ingredient
     };
   },
-  deleteIngredient = (ingredients, callback) => {
+  deleteIngredient = (id, callback) => {
     callback();
-    const promise= axios.put('https://recipemanager-cad40.firebaseio.com/ingredients.json',ingredients);
+    const promise= axios.delete(`https://recipemanager-cad40.firebaseio.com/ingredients/${id}.json`);
     return {
       type: DELETE_INGREDIENT,
-      payload: ingredients
+      payload: id
     };
   },
   fetchIngredients = () => {
@@ -53,23 +53,24 @@ export const addIngredient = (ingredient, callback) => {
   },
   editRecipe = (id, recipe, callback) => {
     callback();
-    axios.put('https://recipemanager-cad40.firebaseio.com/recipes.json',recipe);
+    const promise= axios.put(`https://recipemanager-cad40.firebaseio.com/recipes/${id}.json`,recipe);
     return {
       type: EDIT_RECIPE,
       payload: recipe
     };
   },
-  deleteRecipe = (recipes, callback) => {
+  deleteRecipe = (id, callback) => {
     callback();
-    axios.put('https://recipemanager-cad40.firebaseio.com/recipes.json',recipes);
+    console.log(id);
+    const promise= axios.delete(`https://recipemanager-cad40.firebaseio.com/recipes/${id}.json`);
     return {
       type: DELETE_RECIPE,
-      payload: recipes
+      payload: promise
     };
   },
-  addRecipe = (recipes, callback) => {
+  addRecipe = (recipe, callback) => {
     callback();
-    const promise= axios.put('https://recipemanager-cad40.firebaseio.com/recipes.json',recipes);
+    const promise= axios.post('https://recipemanager-cad40.firebaseio.com/recipes.json',recipe);
     return {
       type: ADD_RECIPE,
       payload: promise
@@ -83,15 +84,16 @@ export const addIngredient = (ingredient, callback) => {
     };
   },
   editTask = (id, task, callback) => {
-    const promise= axios.put('https://recipemanager-cad40.firebaseio.com/tasks.json',task);
+    console.log('editing task',id,task);
+    const promise= axios.put(`https://recipemanager-cad40.firebaseio.com/tasks/${id}.json`,task);
     callback();
     return {
       type: EDIT_TASK,
       payload: { id, task }
     };
   },
-  deleteTask = (newTasks, callback) => {
-    const promise= axios.put('https://recipemanager-cad40.firebaseio.com/tasks.json',newTasks);
+  deleteTask = (id, callback) => {
+    const promise= axios.delete(`https://recipemanager-cad40.firebaseio.com/tasks/${id}.json`);
     callback();
     return {
       type: DELETE_TASK,
@@ -99,7 +101,7 @@ export const addIngredient = (ingredient, callback) => {
     };
   },
   addTask = (task, callback) => {
-    const promise= axios.put('https://recipemanager-cad40.firebaseio.com/tasks.json',task);
+    const promise= axios.post('https://recipemanager-cad40.firebaseio.com/tasks.json',task);
     callback();
     console.log(task);
     return {

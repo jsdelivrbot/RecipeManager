@@ -13,19 +13,23 @@ export const generateID = () =>
     }
     return ret
   },
-  parseRelations = (arr1, arr2) =>
-    arr1.map(v => merge(findIdInArray(v.id, arr2), v)),
-  generateIngredientsToPrepare = task => {
+  parseRelations = (obj1, obj2) =>{
     const ret = {}
-    task.recipes.forEach(recipe => {
-      (recipe.ingredients || []).forEach(ingredient => {
-        if (has(ret, ingredient.id)) {
-          ret[ingredient.id].amount +=
-            ingredient.amount * recipe.amount / recipe.baseAmount
+    Object.entries(obj1).forEach(v =>(ret[v[1].id]= merge(obj2[v[1].id], v[1])))
+    return ret;
+  },
+  generateIngredientsToPrepare = task => {
+    console.log('gitp',task);
+    const ret = {}
+    Object.entries(task.recipes).forEach(recipe => {
+      Object.entries(recipe[1].ingredients || {}).forEach(ingredient => {
+        if (has(ret, ingredient[0])) {
+          ret[ingredient[0]].amount +=
+            ingredient[1].amount * recipe[1].amount / recipe[1].baseAmount
         } else {
-          ret[ingredient.id] = {
-            ...ingredient,
-            amount: ingredient.amount * recipe.amount / recipe.baseAmount
+          ret[ingredient[0]] = {
+            ...ingredient[1],
+            amount: ingredient[1].amount * recipe[1].amount / recipe[1].baseAmount
           }
         }
       })

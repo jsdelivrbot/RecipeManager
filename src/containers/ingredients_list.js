@@ -55,7 +55,8 @@ export class IngredientsListRaw extends Component {
   }
 
   renderIngredients() {
-    return this.props.ingredients.map((ingredient, i) => {
+    return this.props.ingredients && Object.keys(this.props.ingredients).map((key, i) => {
+      const ingredient = this.props.ingredients[key];
       return (
         <ListItem
           key={i}

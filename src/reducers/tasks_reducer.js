@@ -17,7 +17,7 @@ export default function(state = [], action) {
     case DELETE_TASK:
       console.log('deleted task',state,action.payload);
       // window.localStorage.setItem('tasksList', JSON.stringify(newState));
-      return action.payload.data;
+      return state;
     case FETCH_TASKS:
       console.log('fetching tasks');
       // window.localStorage.setItem('tasksList', JSON.stringify(action.payload.data));

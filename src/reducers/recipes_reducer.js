@@ -11,17 +11,17 @@ export default function(state = [], action) {
       return state;
     case ADD_RECIPE:
       console.log('adding recipe');
-      state.push(action.payload);
-      window.localStorage.setItem('recipesList', JSON.stringify(state.ingredients));
+      console.log(action.payload);
+      // state.push(action.payload);
+      // window.localStorage.setItem('recipesList', JSON.stringify(state.ingredients));
       return state;
     case DELETE_RECIPE:
       console.log('deleted recipe');
-      const newState = state.filter((v, i) => i != action.payload);
-      window.localStorage.setItem('recipesList', JSON.stringify(newState));
-      return newState;
+      // window.localStorage.setItem('recipesList', JSON.stringify(newState));
+      return state;
     case FETCH_RECIPES:
       console.log('fetching recipes',action.payload.data);
-      window.localStorage.setItem('recipesList', JSON.stringify(action.payload.data));
+      // window.localStorage.setItem('recipesList', JSON.stringify(action.payload.data));
       return action.payload.data;
     default:
       return state;

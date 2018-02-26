@@ -37,7 +37,7 @@ class IngredientDetail extends Component {
     // openProcedury: false,
     // openUsterki: false,
     id: this.id,
-    newIngredient: this.props.ingredients[this.id],
+    newIngredient: this.props.ingredients[Object.keys(this.props.ingredients)[this.id]],
     value: null
     // proceduresLeft: this.props.procedures,
     // nowausterka: { name: '', desc: '' }
@@ -54,7 +54,7 @@ class IngredientDetail extends Component {
 
   onSubmit = () => {
     const f1 = () => {
-      this.props.editIngredient(this.props.ingredients, () => {
+      this.props.editIngredient(Object.keys(this.props.ingredients)[this.id],this.state.newIngredient, () => {
         console.log('saved')
       })
     }
@@ -78,7 +78,7 @@ class IngredientDetail extends Component {
   handleClose2 = () => {
     this.setState({ ...this.state, open: false })
     console.log("usuwam",this.props);
-    this.props.deleteIngredient( this.props.ingredients.filter((v, i) => v.id !=this.state.newIngredient.id), () => {
+    this.props.deleteIngredient( Object.keys(this.props.ingredients)[this.id], () => {
       this.props.history.push('/')
     })
   }
@@ -183,6 +183,7 @@ class IngredientDetail extends Component {
 }
 
 function mapStateToProps(state) {
+  console.log('state',state);
   return {
     ingredients: state.ingredients,
     procedures: state.procedures
